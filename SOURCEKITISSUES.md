@@ -9,14 +9,15 @@ Bugs that are marked as merged are fixed in the Swift repo, but still bugged in 
 - **IN-REVIEW**: [(SR-9020)](https://bugs.swift.org/browse/SR-9020) Legacy KeyPaths that include types, such as `#keyPath(Foo.bar)` will not get indexed.
 - **MERGED**: [(SR-9039)](https://bugs.swift.org/browse/SR-9039) Explicit Swift KeyPaths such as `\Foo.bar` will not index the type portion.
 - Emoji Strings: Although SourceKit has no real bugs regarding emojis, it does treat them differently: While SourceKit treats emojis as several characters, Swift treats them as a single one - which will prevent SwiftShield from knowing the correct position of the references after said emoji. While a solution isn't found, you can avoid this by not using emojis.
-- **IN-PROGRESS**: Expressions marked as `@available` fail to be indexed.
+- **IN-REVIEW**: Expressions marked as `@available` fail to be indexed.
+- `@objc optional` protocol methods don't have their references indexed.
 
 # Types that won't be obfuscated
 
 The following types and cases might be working correctly in SourceKit, but are currently disabled for other reasons.
 
 - Typealiases and Associated Types: Not always indexed (`typealias Foo = UIImage | extension Foo {}` - Foo is ignored and indexed as UIImage). Note that these can't be reverse-engineered as they are purely an editor thing, so no action is required!
-- Enum cases and names: Although they are correctly indexed, some enums like `CodingKeys` are not meant to be changed. This will be activated again once the way to determine if an enum is related to internal frameworks is implemented.
+- Enum cases and names ending with `CodingKeys`: We avoid obfuscating Codable enums (otherwise your app wouldn't work), but this is detected by a name having the suffix `CodingKeys`.
 - **MERGED**: Methods with names under four characters: Operators only get indexed as such if they are declared in a global scope. Since most people use `public static func`, they get indexed as regular methods. To prevent operators from being obfuscated, methods with names shorter than four characters won't get obfuscated.
 - Properties: Properties are on hold for a while because they break derived `Codable` types. Although the obfuscation works correctly, if you build `Codable` types to work on top of a backend's json, parsing will fail because of the different property name.
 - Module names: Not implemented yet!

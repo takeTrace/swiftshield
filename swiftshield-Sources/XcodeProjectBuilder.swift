@@ -4,6 +4,7 @@ final class XcodeProjectBuilder {
     let projectToBuild: String
     let schemeToBuild: String
     let modulesToIgnore: Set<String>
+    var sdkMode: Bool
 
     private typealias MutableModuleData = (source: [File], xibs: [File], plists: [File], args: [String])
     private typealias MutableModuleDictionary = OrderedDictionary<String, MutableModuleData>
@@ -12,10 +13,11 @@ final class XcodeProjectBuilder {
         return projectToBuild.hasSuffix(".xcworkspace")
     }
 
-    init(projectToBuild: String, schemeToBuild: String, modulesToIgnore: Set<String>) {
+    init(projectToBuild: String, schemeToBuild: String, modulesToIgnore: Set<String>, sdkMode: Bool) {
         self.projectToBuild = projectToBuild
         self.schemeToBuild = schemeToBuild
         self.modulesToIgnore = modulesToIgnore
+        self.sdkMode = sdkMode
     }
 
     func getModulesAndCompilerArguments() -> [Module] {
@@ -25,10 +27,13 @@ final class XcodeProjectBuilder {
         Logger.log(.buildingProject)
         let path = "/usr/bin/xcodebuild"
         let projectParameter = isWorkspace ? "-workspace" : "-project"
-        let arguments: [String] = [projectParameter, projectToBuild, "-scheme", schemeToBuild]
+        var arguments: [String] = [projectParameter, projectToBuild, "-scheme", schemeToBuild]
+        if sdkMode {
+            arguments += ["-sdk", "iphoneos"]
+        }
         let cleanTask = Process()
         cleanTask.launchPath = path
-        cleanTask.arguments = ["clean", "build"] + arguments + ["CODE_SIGN_IDENTITY=", "CODE_SIGNING_REQUIRED=NO"]
+        cleanTask.arguments = ["clean", "build"] + arguments
         let outpipe: Pipe = Pipe()
         cleanTask.standardOutput = outpipe
         cleanTask.standardError = outpipe
@@ -37,6 +42,10 @@ final class XcodeProjectBuilder {
         guard let output = String(data: outdata, encoding: .utf8) else {
             Logger.log(.compilerArgumentsError)
             exit(error: true)
+        }
+        if cleanTask.terminationStatus != 0 {
+            print(output)
+            fatalError("It looks like xcodebuild failed which prevents SwiftShield from proceeding. The log was printed above.")
         }
         return parseModulesFrom(xcodeBuildOutput: output)
     }
@@ -68,16 +77,50 @@ final class XcodeProjectBuilder {
         guard modules[moduleName]?.args.isEmpty != false else {
             return
         }
-        guard let fullRelevantArguments = firstMatch(for: "/usr/bin/swiftc.*-module-name \(moduleName) .*", in: line) else {
+        guard var fullRelevantArguments = firstMatch(for: "/usr/bin/swiftc.*-module-name \(moduleName) .*", in: line) else {
             print("Fatal: Failed to retrieve \(moduleName) xcodebuild arguments")
             exit(error: true)
         }
         Logger.log(.found(module: moduleName))
+
+        var swiftFileList: File?
+        let result = fullRelevantArguments.match(regex: "(?<=@).*SwiftFileList")
+        if let pathRange = result.first?.range {
+            let nsStr = fullRelevantArguments as NSString
+            let fullRange = NSMakeRange(pathRange.location - 1, pathRange.length + 1)
+            swiftFileList = File(filePath: nsStr.substring(with: pathRange))
+            fullRelevantArguments = nsStr.replacingCharacters(in: fullRange, with: "")
+        }
+
         let relevantArguments = fullRelevantArguments.replacingEscapedSpaces
             .components(separatedBy: " ")
             .map { $0.removingPlaceholder }
-        let files = parseModuleFiles(from: relevantArguments)
-        let compilerArguments = parseCompilerArguments(from: relevantArguments)
+
+        var files: [File]
+        var compilerArguments = parseCompilerArguments(from: relevantArguments)
+
+        if let swiftFileList = swiftFileList {
+            let swiftFilePaths = swiftFileList.read()
+                .components(separatedBy: "\n")
+                .filter { !$0.isEmpty }
+
+            if let complieFlagIndex = compilerArguments.firstIndex(of: "-c") {
+                var insertIndex = complieFlagIndex
+                if complieFlagIndex + 1 < compilerArguments.count,
+                    compilerArguments[complieFlagIndex + 1].hasPrefix("-j") {
+                    insertIndex += 1
+                }
+
+                compilerArguments.insert(contentsOf: swiftFilePaths, at: insertIndex + 1)
+            } else {
+                compilerArguments.append(contentsOf: ["-c"] + swiftFilePaths)
+            }
+
+            files = swiftFilePaths.map(File.init)
+        } else {
+            files = parseModuleFiles(from: relevantArguments)
+        }
+
         set(sourceFiles: files, to: moduleName, modules: &modules)
         set(compilerArgs: compilerArguments, to: moduleName, modules: &modules)
     }

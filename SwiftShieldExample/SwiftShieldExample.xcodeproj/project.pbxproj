@@ -3,11 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		690E9FDA54E33AE150456400 /* Pods_SwiftShieldExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 906E79CBAAED7E65DB3DE1FF /* Pods_SwiftShieldExample.framework */; };
+		84F0B22C23C21BB4005CEE05 /* SwiftShieldSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 846A66E623AFA38D005801B8 /* SwiftShieldSDK.framework */; };
+		84F0B22D23C21BB4005CEE05 /* SwiftShieldSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 846A66E623AFA38D005801B8 /* SwiftShieldSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FD5360EF212DFC21004FB44F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5360EE212DFC21004FB44F /* AppDelegate.swift */; };
 		FD5360F1212DFC21004FB44F /* MyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5360F0212DFC21004FB44F /* MyViewController.swift */; };
 		FD5360F4212DFC21004FB44F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FD5360F2212DFC21004FB44F /* Main.storyboard */; };
@@ -15,7 +17,46 @@
 		FD5360F9212DFC23004FB44F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FD5360F7212DFC23004FB44F /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		846A66E523AFA38D005801B8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 846A66E023AFA38C005801B8 /* SwiftShieldSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 846A66C623AFA37C005801B8;
+			remoteInfo = SwiftShieldSDK;
+		};
+		846A66E723AFA38D005801B8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 846A66E023AFA38C005801B8 /* SwiftShieldSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 846A66CF23AFA37C005801B8;
+			remoteInfo = SwiftShieldSDKTests;
+		};
+		846A66ED23AFA6B0005801B8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 846A66E023AFA38C005801B8 /* SwiftShieldSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 846A66C523AFA37C005801B8;
+			remoteInfo = SwiftShieldSDK;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		84F0B22E23C21BB5005CEE05 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				84F0B22D23C21BB4005CEE05 /* SwiftShieldSDK.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		846A66E023AFA38C005801B8 /* SwiftShieldSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftShieldSDK.xcodeproj; path = SwiftShieldSDK/SwiftShieldSDK.xcodeproj; sourceTree = "<group>"; };
 		887E68FDACDAF78F3E840DBC /* Pods-SwiftShieldExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftShieldExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftShieldExample/Pods-SwiftShieldExample.debug.xcconfig"; sourceTree = "<group>"; };
 		906E79CBAAED7E65DB3DE1FF /* Pods_SwiftShieldExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftShieldExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD814D94DFF5C577F98E325F /* Pods-SwiftShieldExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftShieldExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftShieldExample/Pods-SwiftShieldExample.release.xcconfig"; sourceTree = "<group>"; };
@@ -33,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84F0B22C23C21BB4005CEE05 /* SwiftShieldSDK.framework in Frameworks */,
 				690E9FDA54E33AE150456400 /* Pods_SwiftShieldExample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -57,9 +99,19 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		846A66E123AFA38C005801B8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				846A66E623AFA38D005801B8 /* SwiftShieldSDK.framework */,
+				846A66E823AFA38D005801B8 /* SwiftShieldSDKTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		FD5360E2212DFC21004FB44F = {
 			isa = PBXGroup;
 			children = (
+				846A66E023AFA38C005801B8 /* SwiftShieldSDK.xcodeproj */,
 				FD5360ED212DFC21004FB44F /* SwiftShieldExample */,
 				FD5360EC212DFC21004FB44F /* Products */,
 				791ABDB44FE7C235598737B9 /* Pods */,
@@ -100,10 +152,12 @@
 				FD5360E8212DFC21004FB44F /* Frameworks */,
 				FD5360E9212DFC21004FB44F /* Resources */,
 				9F318FF03689B66C34DE349D /* [CP] Embed Pods Frameworks */,
+				84F0B22E23C21BB5005CEE05 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				846A66EE23AFA6B0005801B8 /* PBXTargetDependency */,
 			);
 			name = SwiftShieldExample;
 			productName = SwiftShieldExample;
@@ -136,12 +190,35 @@
 			mainGroup = FD5360E2212DFC21004FB44F;
 			productRefGroup = FD5360EC212DFC21004FB44F /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 846A66E123AFA38C005801B8 /* Products */;
+					ProjectRef = 846A66E023AFA38C005801B8 /* SwiftShieldSDK.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				FD5360EA212DFC21004FB44F /* SwiftShieldExample */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		846A66E623AFA38D005801B8 /* SwiftShieldSDK.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SwiftShieldSDK.framework;
+			remoteRef = 846A66E523AFA38D005801B8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		846A66E823AFA38D005801B8 /* SwiftShieldSDKTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SwiftShieldSDKTests.xctest;
+			remoteRef = 846A66E723AFA38D005801B8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		FD5360E9212DFC21004FB44F /* Resources */ = {
@@ -180,19 +257,16 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-SwiftShieldExample/Pods-SwiftShieldExample-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Cartography/Cartography.framework",
-				"${BUILT_PRODUCTS_DIR}/Unbox/Unbox.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SwiftShieldExample/Pods-SwiftShieldExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cartography.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Unbox.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SwiftShieldExample/Pods-SwiftShieldExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SwiftShieldExample/Pods-SwiftShieldExample-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SwiftShieldExample/Pods-SwiftShieldExample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -208,6 +282,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		846A66EE23AFA6B0005801B8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SwiftShieldSDK;
+			targetProxy = 846A66ED23AFA6B0005801B8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		FD5360F2212DFC21004FB44F /* Main.storyboard */ = {
@@ -348,14 +430,18 @@
 			baseConfigurationReference = 887E68FDACDAF78F3E840DBC /* Pods-SwiftShieldExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DFM84XB9EC;
 				INFOPLIST_FILE = SwiftShieldExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.rockbruno.SwiftShieldExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -366,14 +452,18 @@
 			baseConfigurationReference = BD814D94DFF5C577F98E325F /* Pods-SwiftShieldExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DFM84XB9EC;
 				INFOPLIST_FILE = SwiftShieldExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.rockbruno.SwiftShieldExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

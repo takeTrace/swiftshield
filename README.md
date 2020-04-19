@@ -79,6 +79,7 @@ If one or more modules/extensions of your app fail to satify these conditions, y
 2. No Objective-C classes that call Swift methods (Swift classes that call Objective-C methods are fine, except when interfacing is involved)
 4. Latest Swift version and Xcode command line tools (works on all versions, but might have different results due to different SourceKit versions)
 5. Make sure your project doesn't contain one of [SourceKit's bugs](SOURCEKITISSUES.md). Although the bugs won't prevent the project from being obfuscated, some of them might require some manual fixing afterwards.
+6. Enums that represent `Codable` properties should have the suffix `CodingKeys`.
 
 (App Extensions that use `NSExtensionPrincipalClass` or variants in their `Info.plist` (like Rich Notifications/Watch apps) will have such references obfuscated as well, but will assume that you haven't changed them from their default `$(PRODUCT_MODULE_NAME).ClassName` value. If you modified these plists to point to classes in different modules, you'll have to manually change them after running this tool.)
 
@@ -111,6 +112,8 @@ swiftshield -automatic -project-root /app/MyApp -automatic-project-file /app/MyA
 - `-automatic-project-scheme myScheme`: The main scheme to build from your `-automatic-project-file`.
 
 **Optional Parameters:**
+
+- `-sdk`: Prevent public classes and methods from being obfuscated. Use this if it is building a SDK project. 
 
 - `-ignore-modules`: Prevent certain modules from being obfuscated, separated by a comma. Use this if a certain module can't be properly obfuscated. Note that this should be the exact name of the imported module (not the target name!). Example: `MyLib,MyAppRichNotifications,MyAppWatch_Extension`
 
@@ -147,7 +150,7 @@ Contributions to SwiftShield are more than welcome! There's no contribution guid
 
 - [X] Method names
 - [X] Update Extension plists (Rich Notifications / Watch main classes)
-- [ ] "SDK Mode" (ignore `public`)
+- [X] "SDK Mode" (ignore `public`)
 - [ ] Properties
 - [ ] Module names
 
