@@ -1,9 +1,10 @@
 <img src="http://i.imgur.com/0ksj7Gh.png" alt="SwiftShield logo" height="140" >
 
 ```swift
-class fjiovh4894bvic: XbuinvcxoDHFh3fjid {
-  func cxncjnx8fh83FDJSDd() {
-    return vPAOSNdcbif372hFKF()
+struct fjiovh4894bvic: XbuinvcxoDHFh3fjid {
+  let VNfhnfn3219d: Vnahfi5n34djga
+  func cxncjnx8fh83FDJSDd() -> Lghbna2gf0gmh3d {
+    return vPAOSNdcbif372hFKF(VNfhnfn3219d.Gjanbfpgi3jfg())
   }
 }
 ```
@@ -14,21 +15,21 @@ class fjiovh4894bvic: XbuinvcxoDHFh3fjid {
 
 SwiftShield is a tool that generates irreversible encrypted names for your iOS project's types and methods (including third-party libraries and Storyboards) in order to protect your app from iOS reverse engineering tools like `class-dump` and `Cycript`. It uses Apple's SourceKit to mimick Xcode's indexing behavior, revealing a complete map of your project that is used to safely rename parts of your project. 
 
-Check this repo's example project to see it in action! You can run it by executing `make swiftshield` in your terminal.
-
 ## Limitations
 
 The capabilities of SwiftShield are directly related to the capabilities of SourceKit, which unfortunately has its share of bugs. However, although SwiftShield can't obfuscate *everything*, it can obfuscate just enough to make reverse engineering very hard. [Check this document to see its capabilities in detail](SOURCEKITISSUES.md).
 
 ## Requirements
 
-- You should not have logic based on type names (like loading `MyClass.json` because `String(describing: type(of:self))` is `'MyClass'`). SwiftShield does not obfuscate things like file names and hardcoded strings -- only the types themselves.
+- You should not have logic based on hardcoded names (like loading `MyClass.json` because `String(describing: type(of:self))` is `'MyClass'`). SwiftShield does not obfuscate things like file names and hardcoded strings -- only the types themselves.
 - No Objective-C classes that call Swift methods (but Swift classes calling Objective-C code is fine).
 - Your project should be 100% written in View Code. Older versions of SwiftShield did support obfuscating Storyboards/XIBs, but it was extremely hard to maintain. This parts from the principle that if you have a project big or important enough to be obfuscated, you probably shouldn't be using Storyboards in first place.
 - Your project should **not** be using Xcode's Legacy Build System setting.
 - Make sure your project doesn't suffer from [one of SourceKit's bugs](SOURCEKITISSUES.md). Although the bugs won't prevent the project from being obfuscated, some of them might require you to manually fix the resulting code as it will not be able to compile.
 
 ## Usage
+
+Check this repo's example project to see it in action! You can run it by executing `make swiftshield` in your terminal.
 
 ### Downloading SwiftShield
 

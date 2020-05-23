@@ -58,7 +58,7 @@ extension SourceKitObfuscator {
         ofFile _: File
     ) {
         let entityKind: SKUID = dict[keys.kind]!
-        guard let declType = entityKind.declarationType() else {
+        guard entityKind.declarationType() != nil else {
             return
         }
         guard let rawName: String = dict[keys.name],
@@ -68,18 +68,13 @@ extension SourceKitObfuscator {
 
         let name = rawName.removingParameterInformation
 
-        // Exclude CodingKeys
-        // This should be done by checking the `CodingKey` protocol instead of the enum name.
-        if declType == .enum, name.hasSuffix("CodingKeys") {
-            dataStore.codableEnumUSRs.insert(usr)
+        if dict.isCodingKeysEnumElement {
+            return
         }
 
-        if declType == .enumelement {
-            guard dataStore.codableEnumUSRs.first(where: { usr.hasPrefix($0) }) == nil else {
-                return
-            }
+        if dict.isCodableProperty {
+            return
         }
-        //
 
         logger.log("* Found declaration of \(name) (USR: \(usr))")
         dataStore.processedUsrs.insert(usr)
@@ -232,14 +227,17 @@ extension SourceKitObfuscator {
 
 extension SKResponseDictionary {
     var isPublic: Bool {
+        if let kindId: SKUID = self[sourcekitd.keys.kind], let type = kindId.declarationType(), type == .enumelement {
+            return parent.isPublic
+        }
         guard let attributes: SKResponseArray = self[sourcekitd.keys.attributes] else {
             return false
         }
         guard attributes.count > 0 else {
             return false
         }
-        for _ in 0 ..< attributes.count {
-            guard let attr: SKUID = attributes[0][sourcekitd.keys.attribute] else {
+        for i in 0 ..< attributes.count {
+            guard let attr: SKUID = attributes[i][sourcekitd.keys.attribute] else {
                 continue
             }
             guard attr.asString == AccessControl.public.rawValue || attr.asString == AccessControl.open.rawValue else {
@@ -248,6 +246,48 @@ extension SKResponseDictionary {
             return true
         }
         return false
+    }
+
+    var isCodingKeysEnumElement: Bool {
+        guard let kindId: SKUID = self[sourcekitd.keys.kind],
+              let type = kindId.declarationType(),
+              type == .enumelement else
+        {
+            return false
+        }
+        guard let parentEntities: SKResponseArray = parent[sourcekitd.keys.entities] else {
+            return false
+        }
+        var result = false
+        parentEntities.forEach(parent: parent) { (i, dict) -> Bool in
+            guard let usr: String = dict[self.sourcekitd.keys.usr], usr == "s:s9CodingKeyP" else {
+                return true
+            }
+            result = true
+            return false
+        }
+        return result
+    }
+
+    var isCodableProperty: Bool {
+        guard let kindId: SKUID = self[sourcekitd.keys.kind],
+              let type = kindId.declarationType(),
+              type == .property else
+        {
+            return false
+        }
+        guard let parentEntities: SKResponseArray = parent[sourcekitd.keys.entities] else {
+            return false
+        }
+        var result = false
+        parentEntities.forEach(parent: parent) { (i, dict) -> Bool in
+            guard let usr: String = dict[self.sourcekitd.keys.usr], usr == "s:s7Codablea" else {
+                return true
+            }
+            result = true
+            return false
+        }
+        return result
     }
 
     func isReferencingInternalFramework(dataStore: SourceKitObfuscatorDataStore) -> Bool {
