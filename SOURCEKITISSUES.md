@@ -3,15 +3,18 @@
 - Classes
 - Structs
 - Methods
-- Properties (except ones under `Codable` types -- even if they are not used as `CodingKeys`)
-- Enums (except ones that inherit from `CodingKey`)
+- Properties (see below for exceptions)
+- Enums (see below for exceptions)
 - Enum cases
 
 # What SwiftShield can't obfuscate
 
 - `typealias` and `associatedtypes`: SourceKit doesn't always index them, so we avoid them to prevent broken projects. Note that these can't be reverse engineered as they are purely an editor thing, so avoiding them isn't a problem!
-- Module names: Not implemented yet, but possible.
 - Local content inside methods (like argument names and inner properties). They aren't indexed, but they also can't be reverse engineered.
+- Properties from types that inherit from `Codable`, `Encodable` or `Decodable`, as obfuscating them would break your project.
+- Properties belonging to `@objc` classes. This is because SourceKit cannot inspect non-Swift content, and we need it to determine if a property's parent inherits from `Codable`.
+- Enums that inherit from `CodingKey`, as obfuscating them would break your project.
+- Module names: Not implemented yet.
 
 # SourceKit Bugs
 
@@ -36,7 +39,7 @@ The `--ignore-public` (or SDK Mode) obfuscates your app while ignoring anything 
 
 SourceKit has a problem where it can't detect content inside public extensions as such. For example, the following snippet will correctly avoid obfuscating `myMethod()`:
 
-```
+```swift
 extension Int {
     public func myMethod() {}
 }
@@ -44,7 +47,7 @@ extension Int {
 
 This one however, will be incorrectly obfuscated as SourceKit doesn't recognize `myMethod()` as being public (even though it is).
 
-```
+```swift
 public extension Int {
     func myMethod() {}
 }
